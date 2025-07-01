@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksplorasi Interaktif: Dunia Bilangan Bulat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: Aplikasi ini dirancang dengan struktur berbasis tab untuk memecah konten yang kompleks menjadi bagian-bagian yang mudah dicerna: Pengenalan, Operasi Interaktif, Sifat-sifat, dan Aplikasi. Pendekatan ini dipilih untuk memfasilitasi navigasi non-linear, memungkinkan pengguna untuk langsung menuju ke topik yang diminati. Inti dari aplikasi ini adalah 'Operasi Interaktif', yang menggunakan visualisasi garis bilangan dinamis untuk mengubah konsep abstrak operasi hitung menjadi pengalaman visual yang konkret. Alur pengguna dirancang untuk mendorong eksplorasi aktif (misalnya, mencoba berbagai angka dan operasi) daripada konsumsi pasif, yang penting untuk pemahaman matematika yang mendalam. -->
+    <!-- Visualization & Content Choices: 1. Konsep Bilangan Bulat -> Tujuan: Menginformasikan & Visualisasi -> Metode: Teks dan visualisasi Garis Bilangan Interaktif menggunakan Chart.js. -> Interaksi: Pengguna dapat memasukkan angka untuk melihat posisinya di garis bilangan. -> Justifikasi: Membuat konsep posisi dan nilai menjadi dinamis dan mudah dipahami. 2. Operasi Hitung -> Tujuan: Menjelaskan & Mempraktikkan -> Metode: Kalkulator interaktif yang terhubung dengan visualisasi garis bilangan Chart.js yang menganimasikan "lompatan" untuk setiap operasi. -> Interaksi: Pengguna mengontrol input dan operasi, lalu mengamati proses visualnya. -> Justifikasi: Mengubah perhitungan menjadi cerita visual, memperkuat pemahaman tentang bagaimana operasi bekerja. 3. Sifat Operasi -> Tujuan: Mengorganisir & Memfasilitasi Penemuan -> Metode: Templat persamaan interaktif (HTML/JS) di mana pengguna dapat menguji apakah sifat-sifat (misalnya, Komutatif) berlaku untuk operasi yang berbeda. -> Interaksi: Pengguna memasukkan nilai dan memilih operasi untuk memvalidasi persamaan secara real-time. -> Justifikasi: Mendorong pembelajaran berbasis penemuan. 4. Aplikasi Dunia Nyata -> Tujuan: Menghubungkan & Memberi Konteks -> Metode: Tata letak kartu (HTML/Tailwind) dengan ikon Unicode. -> Interaksi: Efek hover menampilkan contoh spesifik. -> Justifikasi: Menunjukkan relevansi konsep matematika dalam kehidupan sehari-hari. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-btn { transition: all 0.3s ease; }
+        .tab-btn.active { border-color: #f59e0b; color: #f59e0b; background-color: #fffbeb; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 150px;
+            max-height: 200px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 200px;
+                max-height: 250px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-amber-600">Dunia Bilangan Bulat</h1>
+            <p class="mt-2 text-lg text-stone-600">Sebuah Petualangan Belajar Interaktif</p>
+        </header>
+
+        <nav class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
+            <button data-tab="pengenalan" class="tab-btn active font-medium py-2 px-4 rounded-full border-2 border-stone-200 hover:bg-amber-100 hover:border-amber-400">Pengenalan</button>
+            <button data-tab="operasi" class="tab-btn font-medium py-2 px-4 rounded-full border-2 border-stone-200 hover:bg-amber-100 hover:border-amber-400">Operasi Interaktif</button>
+            <button data-tab="sifat" class="tab-btn font-medium py-2 px-4 rounded-full border-2 border-stone-200 hover:bg-amber-100 hover:border-amber-400">Sifat-Sifat</button>
+            <button data-tab="aplikasi" class="tab-btn font-medium py-2 px-4 rounded-full border-2 border-stone-200 hover:bg-amber-100 hover:border-amber-400">Aplikasi</button>
+        </nav>
+
+        <main>
+            <section id="pengenalan" class="content-section active p-4 md:p-8 bg-white rounded-2xl shadow-lg">
+                <h2 class="text-2xl md:text-3xl font-bold text-amber-600 mb-4">Apa Itu Bilangan Bulat?</h2>
+                <p class="mb-6 text-stone-700">Selamat datang di dunia bilangan bulat! Bagian ini akan memperkenalkan Anda pada konsep dasar bilangan bulat. Bilangan bulat bukan hanya angka di atas kertas; mereka adalah alat yang kita gunakan untuk memahami dunia, dari suhu terdingin hingga keuntungan finansial. Mari kita mulai petualangan ini dengan menjelajahi apa itu bilangan bulat dan di mana kita bisa menemukannya.</p>
+                <div class="grid md:grid-cols-3 gap-6 text-center">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg text-blue-800">Positif</h3>
+                        <p class="text-blue-700">{1, 2, 3, ...}</p>
+                        <p class="text-sm mt-1">Sama seperti bilangan asli.</p>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg text-amber-800">Nol</h3>
+                        <p class="text-amber-700">{0}</p>
+                         <p class="text-sm mt-1">Pemisah antara positif dan negatif.</p>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg text-red-800">Negatif</h3>
+                        <p class="text-red-700">{..., -3, -2, -1}</p>
+                         <p class="text-sm mt-1">Lawan dari bilangan asli.</p>
+                    </div>
+                </div>
+                 <div class="mt-8 p-4 bg-stone-100 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2 text-stone-800">Tantangan Interaktif: Puncak & Palung</h3>
+                    <p class="text-stone-700 mb-4">Bayangkan puncak gunung Jayawijaya berada di ketinggian +4.884 meter dan Palung Mariana berada di kedalaman -10.994 meter. Keduanya adalah contoh bilangan bulat. Angka mana yang lebih besar? Masukkan di bawah untuk melihat posisinya!</p>
+                    <div class="flex items-center justify-center gap-4">
+                        <input id="numberLineInput" type="number" class="w-40 p-2 border-2 border-stone-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Masukkan angka...">
+                        <button id="numberLineBtn" class="bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600">Tampilkan</button>
+                    </div>
+                </div>
+                 <div class="chart-container mt-4">
+                    <canvas id="numberLineChart"></canvas>
+                </div>
+            </section>
+
+            <section id="operasi" class="content-section p-4 md:p-8 bg-white rounded-2xl shadow-lg">
+                 <h2 class="text-2xl md:text-3xl font-bold text-amber-600 mb-4">Laboratorium Operasi Hitung</h2>
+                <p class="mb-6 text-stone-700">Inilah bagian paling seru! Di sini, Anda bukan hanya menghitung, tetapi juga melihat bagaimana operasi matematika terjadi secara visual. Masukkan dua bilangan, pilih operasinya, dan saksikan bagaimana angka-angka "melompat" pada garis bilangan untuk menemukan jawabannya. Ini akan membantu Anda memahami logika di balik setiap perhitungan.</p>
+                <div class="bg-stone-100 p-6 rounded-lg">
+                    <div class="flex flex-wrap justify-center items-center gap-4">
+                        <input id="num1" type="number" value="3" class="w-24 p-2 text-center border-2 border-stone-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400">
+                        <select id="operator" class="p-2 border-2 border-stone-300 rounded-lg bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400">
+                            <option value="add">+</option>
+                            <option value="subtract">-</option>
+                            <option value="multiply">×</option>
+                            <option value="divide">÷</option>
+                        </select>
+                        <input id="num2" type="number" value="-4" class="w-24 p-2 text-center border-2 border-stone-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400">
+                        <button id="calculateBtn" class="bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600">Hitung!</button>
+                    </div>
+                    <div id="result" class="mt-4 text-center text-2xl font-bold text-stone-800 h-8"></div>
+                    <div id="explanation" class="mt-2 text-center text-stone-600 h-6"></div>
+                </div>
+                <div class="chart-container mt-4">
+                    <canvas id="operationChart"></canvas>
+                </div>
+            </section>
+
+            <section id="sifat" class="content-section p-4 md:p-8 bg-white rounded-2xl shadow-lg">
+                 <h2 class="text-2xl md:text-3xl font-bold text-amber-600 mb-4">Uji Coba Sifat-Sifat Operasi</h2>
+                 <p class="mb-6 text-stone-700">Setiap operasi hitung memiliki "aturan main" atau sifatnya sendiri. Di bagian ini, Anda bisa menjadi seorang ilmuwan matematika! Uji coba sifat-sifat seperti Komutatif (bisa ditukar?) dan Asosiatif (bisa dikelompokkan berbeda?) dengan memasukkan angka-angka Anda sendiri. Cari tahu sifat mana yang berlaku untuk penjumlahan, pengurangan, perkalian, dan pembagian.</p>
+                <div class="space-y-6">
+                    <!-- Komutatif -->
+                    <div class="bg-stone-100 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg">Sifat Komutatif (Pertukaran)</h3>
+                        <p class="text-sm text-stone-600 mb-2">Apakah a + b = b + a?</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <input type="number" value="5" class="prop-input w-16 p-1 border rounded" data-prop="komutatif" data-var="a">
+                            <select class="prop-op p-1 border rounded bg-white" data-prop="komutatif"> <option value="+">+</option><option value="-">-</option><option value="*">×</option><option value="/">÷</option> </select>
+                            <input type="number" value="3" class="prop-input w-16 p-1 border rounded" data-prop="komutatif" data-var="b">
+                            <span class="font-bold">=</span>
+                            <input type="number" value="3" class="prop-input w-16 p-1 border rounded" data-prop="komutatif" data-var="b" disabled>
+                            <select class="prop-op p-1 border rounded bg-white" data-prop="komutatif" disabled> <option value="+">+</option><option value="-">-</option><option value="*">×</option><option value="/">÷</option> </select>
+                            <input type="number" value="5" class="prop-input w-16 p-1 border rounded" data-prop="komutatif" data-var="a" disabled>
+                            <span id="komutatif-result" class="font-bold text-lg ml-4"></span>
+                        </div>
+                    </div>
+                    <!-- Asosiatif -->
+                    <div class="bg-stone-100 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg">Sifat Asosiatif (Pengelompokan)</h3>
+                        <p class="text-sm text-stone-600 mb-2">Apakah (a + b) + c = a + (b + c)?</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                             <span>(</span>
+                            <input type="number" value="2" class="prop-input w-16 p-1 border rounded" data-prop="asosiatif" data-var="a">
+                            <select class="prop-op p-1 border rounded bg-white" data-prop="asosiatif"> <option value="+">+</option><option value="-">-</option><option value="*">×</option><option value="/">÷</option> </select>
+                            <input type="number" value="3" class="prop-input w-16 p-1 border rounded" data-prop="asosiatif" data-var="b">
+                             <span>)</span>
+                            <select class="prop-op p-1 border rounded bg-white" data-prop="asosiatif" disabled> <option value="+">+</option><option value="-">-</option><option value="*">×</option><option value="/">÷</option> </select>
+                            <input type="number" value="4" class="prop-input w-16 p-1 border rounded" data-prop="asosiatif" data-var="c">
+                            <span class="font-bold">=</span>
+                            <input type="number" value="2" class="prop-input w-16 p-1 border rounded" data-prop="asosiatif" data-var="a" disabled>
+                            <select class="prop-op p-1 border rounded bg-white" data-prop="asosiatif" disabled> <option value="+">+</option><option value="-">-</option><option value="*">×</option><option value="/">÷</option> </select>
+                             <span>(</span>
+                            <input type="number" value="3" class="prop-input w-16 p-1 border rounded" data-prop="asosiatif" data-var="b" disabled>
+                            <select class="prop-op p-1 border rounded bg-white" data-prop="asosiatif" disabled> <option value="+">+</option><option value="-">-</option><option value="*">×</option><option value="/">÷</option> </select>
+                            <input type="number" value="4" class="prop-input w-16 p-1 border rounded" data-prop="asosiatif" data-var="c" disabled>
+                             <span>)</span>
+                            <span id="asosiatif-result" class="font-bold text-lg ml-4"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="aplikasi" class="content-section p-4 md:p-8 bg-white rounded-2xl shadow-lg">
+                <h2 class="text-2xl md:text-3xl font-bold text-amber-600 mb-4">Bilangan Bulat di Sekitar Kita</h2>
+                <p class="mb-6 text-stone-700">Anda mungkin tidak menyadarinya, tetapi bilangan bulat ada di mana-mana! Mereka membantu kita dalam berbagai aspek kehidupan sehari-hari. Bagian ini menunjukkan beberapa contoh nyata di mana pemahaman tentang bilangan bulat menjadi sangat berguna. Coba arahkan kursor Anda ke setiap kartu untuk melihat contoh spesifik.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="group bg-stone-100 p-6 rounded-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl">
+                        <div class="text-4xl mb-3">🌡️</div>
+                        <h3 class="font-bold text-lg text-stone-800">Suhu</h3>
+                        <p class="text-stone-600 group-hover:hidden">Suhu bisa di atas atau di bawah nol.</p>
+                        <p class="hidden group-hover:block text-stone-600">Contoh: Suhu di Puncak Jaya bisa -8°C, sedangkan di Jakarta 32°C.</p>
+                    </div>
+                    <div class="group bg-stone-100 p-6 rounded-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl">
+                        <div class="text-4xl mb-3">🏦</div>
+                        <h3 class="font-bold text-lg text-stone-800">Keuangan</h3>
+                        <p class="text-stone-600 group-hover:hidden">Untung (positif) dan rugi (negatif).</p>
+                        <p class="hidden group-hover:block text-stone-600">Contoh: Untung Rp 50.000 (+50000) atau hutang Rp 20.000 (-20000).</p>
+                    </div>
+                    <div class="group bg-stone-100 p-6 rounded-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl">
+                        <div class="text-4xl mb-3">🌊</div>
+                        <h3 class="font-bold text-lg text-stone-800">Ketinggian</h3>
+                        <p class="text-stone-600 group-hover:hidden">Di atas atau di bawah permukaan laut.</p>
+                        <p class="hidden group-hover:block text-stone-600">Contoh: Pesawat terbang di +9.000 meter, kapal selam menyelam di -300 meter.</p>
+                    </div>
+                    <div class="group bg-stone-100 p-6 rounded-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl">
+                        <div class="text-4xl mb-3">🏢</div>
+                        <h3 class="font-bold text-lg text-stone-800">Lantai Gedung</h3>
+                        <p class="text-stone-600 group-hover:hidden">Lantai atas dan lantai basement.</p>
+                        <p class="hidden group-hover:block text-stone-600">Contoh: Pergi ke lantai 5 (+5) atau ke parkiran basement 2 (-2).</p>
+                    </div>
+                    <div class="group bg-stone-100 p-6 rounded-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl">
+                        <div class="text-4xl mb-3">⛳</div>
+                        <h3 class="font-bold text-lg text-stone-800">Olahraga</h3>
+                        <p class="text-stone-600 group-hover:hidden">Skor di atas atau di bawah par.</p>
+                        <p class="hidden group-hover:block text-stone-600">Contoh: Skor seorang pegolf bisa -3 (3 di bawah par) atau +2 (2 di atas par).</p>
+                    </div>
+                    <div class="group bg-stone-100 p-6 rounded-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl">
+                        <div class="text-4xl mb-3">🚀</div>
+                        <h3 class="font-bold text-lg text-stone-800">Garis Waktu</h3>
+                        <p class="text-stone-600 group-hover:hidden">Sebelum dan sesudah Masehi.</p>
+                        <p class="hidden group-hover:block text-stone-600">Contoh: Peradaban Romawi Kuno sekitar tahun -753 SM, kita hidup di tahun +2024 M.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-12 text-stone-500">
+            <p>&copy; 2024 Eksplorasi Belajar. Dibuat dengan semangat untuk pendidikan.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.content-section');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(item => item.classList.remove('active'));
+                    contents.forEach(content => content.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.tab).classList.add('active');
+                });
+            });
+
+            let numberLineChart, operationChart;
+            const chartFontColor = '#334155'; // stone-700
+
+            function createNumberLineChart(canvasId, initialData = { value: 0, label: 'Titik Awal' }) {
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                const range = 20;
+                const labels = Array.from({ length: 2 * range + 1 }, (_, i) => i - range);
+                const dataPoints = labels.map(l => (l === initialData.value ? 1 : null));
+                
+                return new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: initialData.label,
+                            data: dataPoints,
+                            backgroundColor: '#f59e0b', // amber-500
+                            borderColor: '#b45309', // amber-700
+                            borderWidth: 2,
+                            barPercentage: 0.1,
+                            categoryPercentage: 1.0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            x: { display: false, min: 0, max: 2 },
+                            y: {
+                                ticks: {
+                                    color: chartFontColor,
+                                    font: { size: 14 }
+                                },
+                                grid: {
+                                    color: '#e7e5e4' // stone-200
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                enabled: true,
+                                callbacks: {
+                                    title: function() { return ''; },
+                                    label: function(context) { return `${initialData.label}: ${context.label}`; }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            numberLineChart = createNumberLineChart('numberLineChart');
+
+            document.getElementById('numberLineBtn').addEventListener('click', () => {
+                const val = parseInt(document.getElementById('numberLineInput').value) || 0;
+                const maxVal = Math.max(10, Math.abs(val) + 5);
+                const labels = Array.from({ length: 2 * maxVal + 1 }, (_, i) => i - maxVal);
+                numberLineChart.data.labels = labels;
+                numberLineChart.data.datasets[0].data = labels.map(l => (l === val ? 1 : null));
+                numberLineChart.data.datasets[0].label = `Posisi: ${val}`;
+                numberLineChart.options.plugins.tooltip.callbacks.label = (context) => `Posisi: ${context.label}`;
+                numberLineChart.update();
+            });
+            
+            function createOperationChart(canvasId) {
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: []
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { display: false },
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                ticks: {
+                                    stepSize: 1,
+                                    color: chartFontColor,
+                                    font: { size: 14 }
+                                },
+                                grid: {
+                                    color: '#e7e5e4' // stone-200
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                enabled: true,
+                                mode: 'index',
+                                intersect: false
+                            }
+                        },
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeInOutQuad'
+                        }
+                    }
+                });
+            }
+
+            operationChart = createOperationChart('operationChart');
+
+            function visualizeOperation(num1, num2, operator) {
+                const resultDiv = document.getElementById('result');
+                const explanationDiv = document.getElementById('explanation');
+                let result;
+                let explanation = '';
+
+                operationChart.data.datasets = [];
+                operationChart.update('none');
+
+                // Multiplication & Division visualization is simplified
+                if (operator === 'multiply' || operator === 'divide') {
+                    if (operator === 'multiply') {
+                        result = num1 * num2;
+                        explanation = `${num1} dikali ${num2} adalah ${result}`;
+                    } else {
+                         if (num2 === 0) {
+                            result = 'Error';
+                            explanation = 'Tidak bisa membagi dengan nol!';
+                         } else {
+                            result = num1 / num2;
+                            explanation = `${num1} dibagi ${num2} adalah ${result}`;
+                            // Show only if it's an integer division for clarity
+                            if(num1 % num2 !== 0) {
+                                explanation += ' (pembagian tidak bulat)';
+                                result = result.toFixed(2);
+                            }
+                         }
+                    }
+                    resultDiv.textContent = `= ${result}`;
+                    explanationDiv.textContent = explanation;
+
+                    // Simple chart for mult/div
+                    const labels = [Math.min(0, num1, num2, result || 0) - 2, Math.max(0, num1, num2, result || 0) + 2];
+                    operationChart.data.labels = [labels[0], (labels[0]+labels[1])/2, labels[1]];
+                     operationChart.options.scales.x.ticks.stepSize = Math.ceil((labels[1]-labels[0])/10) || 1;
+                    operationChart.update();
+                    return;
+                }
+
+                // Addition & Subtraction visualization
+                const steps = [];
+                let finalResult;
+
+                if (operator === 'add') {
+                    finalResult = num1 + num2;
+                    explanation = `Mulai dari 0, bergerak ke ${num1}. Lalu bergerak sejauh ${num2}.`;
+                } else { // subtract
+                    finalResult = num1 - num2;
+                    explanation = `Mulai dari 0, bergerak ke ${num1}. Lalu bergerak mundur sejauh ${num2}.`;
+                    num2 = -num2;
+                }
+                
+                resultDiv.textContent = `= ${finalResult}`;
+                explanationDiv.textContent = explanation;
+
+                const step1 = { x: num1, y: 1 };
+                const step2 = { x: finalResult, y: 1 };
+                
+                operationChart.data.datasets = [
+                    {
+                        label: 'Langkah 1',
+                        data: [{x: 0, y: 0}, {x: step1.x, y: 1}],
+                        borderColor: '#3b82f6', // blue-500
+                        tension: 0.3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#3b82f6',
+                        fill: false
+                    },
+                    {
+                        label: 'Langkah 2',
+                        data: [{x: step1.x, y: 1}, {x: step2.x, y: 0}],
+                        borderColor: '#ef4444', // red-500
+                        tension: 0.3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#ef4444',
+                        fill: false
+                    }
+                ];
+
+                const minVal = Math.min(0, num1, finalResult) - 2;
+                const maxVal = Math.max(0, num1, finalResult) + 2;
+                operationChart.options.scales.x.min = minVal;
+                operationChart.options.scales.x.max = maxVal;
+                operationChart.options.scales.x.ticks.stepSize = Math.ceil((maxVal - minVal) / 10) || 1;
+
+                operationChart.update();
+            }
+
+            document.getElementById('calculateBtn').addEventListener('click', () => {
+                const num1 = parseInt(document.getElementById('num1').value) || 0;
+                const num2 = parseInt(document.getElementById('num2').value) || 0;
+                const operator = document.getElementById('operator').value;
+                visualizeOperation(num1, num2, operator);
+            });
+            
+            // Initial calculation
+            visualizeOperation(3, -4, 'add');
+
+            // Properties calculation
+            const propInputs = document.querySelectorAll('.prop-input');
+            const propOps = document.querySelectorAll('.prop-op');
+
+            function calculateProperties() {
+                // Komutatif
+                const opK = document.querySelector('[data-prop="komutatif"].prop-op').value;
+                const aK = parseFloat(document.querySelector('[data-prop="komutatif"][data-var="a"]').value);
+                const bK = parseFloat(document.querySelector('[data-prop="komutatif"][data-var="b"]').value);
+                let resK1, resK2;
+
+                try {
+                    resK1 = eval(`${aK} ${opK.replace('x','*')} ${bK}`);
+                    resK2 = eval(`${bK} ${opK.replace('x','*')} ${aK}`);
+                    if (Math.abs(resK1 - resK2) < 0.001 && isFinite(resK1) && isFinite(resK2)) {
+                        document.getElementById('komutatif-result').innerHTML = 'Benar ✅';
+                        document.getElementById('komutatif-result').className = 'font-bold text-lg ml-4 text-green-600';
+                    } else {
+                        document.getElementById('komutatif-result').innerHTML = 'Salah ❌';
+                        document.getElementById('komutatif-result').className = 'font-bold text-lg ml-4 text-red-600';
+                    }
+                } catch(e) {
+                    document.getElementById('komutatif-result').innerHTML = 'Error';
+                }
+
+                // Asosiatif
+                const opA = document.querySelector('[data-prop="asosiatif"].prop-op').value;
+                const aA = parseFloat(document.querySelector('[data-prop="asosiatif"][data-var="a"]').value);
+                const bA = parseFloat(document.querySelector('[data-prop="asosiatif"][data-var="b"]').value);
+                const cA = parseFloat(document.querySelector('[data-prop="asosiatif"][data-var="c"]').value);
+                let resA1, resA2;
+                 try {
+                    resA1 = eval(`(${aA} ${opA.replace('x','*')} ${bA}) ${opA.replace('x','*')} ${cA}`);
+                    resA2 = eval(`${aA} ${opA.replace('x','*')} (${bA} ${opA.replace('x','*')} ${cA})`);
+                    if (Math.abs(resA1 - resA2) < 0.001 && isFinite(resA1) && isFinite(resA2)) {
+                        document.getElementById('asosiatif-result').innerHTML = 'Benar ✅';
+                        document.getElementById('asosiatif-result').className = 'font-bold text-lg ml-4 text-green-600';
+                    } else {
+                        document.getElementById('asosiatif-result').innerHTML = 'Salah ❌';
+                        document.getElementById('asosiatif-result').className = 'font-bold text-lg ml-4 text-red-600';
+                    }
+                } catch(e) {
+                     document.getElementById('asosiatif-result').innerHTML = 'Error';
+                }
+            }
+
+            propInputs.forEach(input => input.addEventListener('input', (e) => {
+                 const prop = e.target.dataset.prop;
+                 const variable = e.target.dataset.var;
+                 const value = e.target.value;
+                 document.querySelectorAll(`[data-prop="${prop}"][data-var="${variable}"]`).forEach(el => el.value = value);
+                 calculateProperties();
+            }));
+
+            propOps.forEach(op => op.addEventListener('change', (e) => {
+                const prop = e.target.dataset.prop;
+                const value = e.target.value;
+                document.querySelectorAll(`[data-prop="${prop}"].prop-op`).forEach(el => el.value = value);
+                calculateProperties();
+            }));
+
+            calculateProperties();
+
+        });
+    </script>
+</body>
+</html>
